@@ -32,6 +32,9 @@ import java.util.Iterator;
 
 import java.lang.StringBuilder;
 
+/**
+ * Main client class, glues it all together.
+ * */
 public class KnowledgeBase implements EntryPoint {
 
     private static final String REST_URL = GWT.getHostPageBaseURL() + "rest/";
