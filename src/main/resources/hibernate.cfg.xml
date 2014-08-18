@@ -17,7 +17,7 @@
       iboltaev
     </property>
     <property name="hibernate.connection.password">
-      secret
+      mazafaka
     </property>        
     <property name="hibernate.current_session_context_class">
       thread

@@ -127,19 +127,13 @@ public class TreeNodeEdit extends TreeNodeForm {
             new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent e) {
-                    PopupPanel modalPanel = new PopupPanel(false, true);
-                    modalPanel.setWidget(
-                        new TreeNodeAdd(
-                            dataModel,
-                            id == 0 ? "null" : Integer.toString(id),
-                            isChapter,
-                            ModalListenerMaker.makeDataListener(
-                                dataListener, modalPanel),
-                            ModalListenerMaker.makeErrorListener(
-                                onError, modalPanel),
-                            imageLib));
-
-                    modalPanel.center();
+                    new TreeNodeAdd(
+                        dataModel,
+                        id == 0 ? "null" : Integer.toString(id),
+                        isChapter,
+                        dataListener,
+                        onError,
+                        imageLib).center();
                 }
             });
     }

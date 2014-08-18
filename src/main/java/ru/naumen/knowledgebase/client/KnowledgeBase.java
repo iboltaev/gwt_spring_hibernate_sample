@@ -157,28 +157,21 @@ public class KnowledgeBase implements EntryPoint {
                 new ClickHandler() {
                     @Override
                     public void onClick(ClickEvent e) {
-                        PopupPanel modalPanel = new PopupPanel(false, true);
-                        modalPanel.setWidget(
-                            new TreeNodeAdd(
-                                dataModel,
-                                "null",
-                                isChapter,
-                                ModalListenerMaker.makeDataListener(
-                                    new DataChangeListener() {
-                                        @Override
-                                        public void onDataChanged(
-                                            DataChangeListener.Action a, 
-                                            TreeNodeJson data)
-                                        {
-                                            tree.update(a, data);
-                                        }
-                                    }, modalPanel),
-                                ModalListenerMaker.makeErrorListener(
-                                    makeErrorListener(),
-                                    modalPanel),
-                                images));
-
-                        modalPanel.center();
+                        new TreeNodeAdd(
+                            dataModel,
+                            "null",
+                            isChapter,
+                            new DataChangeListener() {
+                                @Override
+                                public void onDataChanged(
+                                    DataChangeListener.Action a, 
+                                    TreeNodeJson data)
+                                {
+                                    tree.update(a, data);
+                                }
+                            },
+                            makeErrorListener(),
+                            images).center();
                     }
                 });
         }

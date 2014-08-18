@@ -10,14 +10,13 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 
-// TODO: make it modal, remove utils.Modal.. stuff
 /**
  * Provides UI for tree items addition. 
  * Fires data update events. 
- * Shall be modal.
  * */
-public class TreeNodeAdd extends TreeNodeForm {
+public class TreeNodeAdd extends PopupPanel {
     private ErrorListener onError;
+    private TreeNodeForm form;
 
     public TreeNodeAdd(
         final KnowledgeModel dataModel,
@@ -27,16 +26,22 @@ public class TreeNodeAdd extends TreeNodeForm {
         final ErrorListener onError,
         final ImageLib imageLib)
     {
-        super(null, dataModel, onError, imageLib);
+        form = new TreeNodeForm(
+            null,
+            dataModel,
+            onError,
+            imageLib);
+
+        add(form);
 
         if (!isChapter)
-            showTextArea();
+            form.showTextArea();
 
         this.onError = onError;
         HorizontalPanel buttonPanel = new HorizontalPanel();
         Button saveButton = new Button();
 
-        addWidget("Actions: ", buttonPanel);
+        form.addWidget("Actions: ", buttonPanel);
         buttonPanel.add(saveButton);
         saveButton.setText("Save");
 
@@ -45,16 +50,24 @@ public class TreeNodeAdd extends TreeNodeForm {
                 @Override
                 public void onClick(ClickEvent e) {
                     dataModel.add(
-                        makeObject(0, parentId), 
+                        form.makeObject(0, parentId), 
                         new KnowledgeModel.ObjectListener() {
                             @Override
                             public void onJson(TreeNodeJson obj) {
+                                hide();
                                 if (dataListener != null)
                                     dataListener.onDataChanged(
                                         DataChangeListener.Action.ADD, obj);
                             }
                         },
-                        onError);
+                        new ErrorListener() {
+                            @Override
+                            public void onError(String text) {
+                                hide();
+                                if (onError != null)
+                                    onError.onError(text);
+                            }
+                        });
                 }
             });
     }

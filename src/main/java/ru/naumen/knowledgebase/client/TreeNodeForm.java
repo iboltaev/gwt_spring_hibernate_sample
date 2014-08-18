@@ -142,13 +142,13 @@ public class TreeNodeForm extends Composite {
         captionPanel.setCaptionText(caption); 
     }
 
-    protected void addWidget(String label, Widget w) {
+    public void addWidget(String label, Widget w) {
         int row = tableLayout.getRowCount();
         tableLayout.setWidget(row, 0, new Label(label));
         tableLayout.setWidget(row, 1, w);
     }
 
-    protected TreeNodeJson makeObject(int id, String parentId) {
+    public TreeNodeJson makeObject(int id, String parentId) {
         TreeNodeJson object = JavaScriptObject
                 .createObject()
                 .<TreeNodeJson>cast();
