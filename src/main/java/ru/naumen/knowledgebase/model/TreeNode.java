@@ -5,6 +5,9 @@ import org.hibernate.annotations.Cascade;
 
 import java.util.List;
 
+/**
+ * This entity represents common data, needed to present item in tree.
+ * */
 @Entity
 @Table
 public class TreeNode {
