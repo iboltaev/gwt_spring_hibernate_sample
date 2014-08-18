@@ -12,7 +12,9 @@ import com.google.gwt.event.dom.client.ClickHandler;
 
 // TODO: make it modal, remove utils.Modal.. stuff
 /**
- * Provides UI for tree items addition. Shall be modal.
+ * Provides UI for tree items addition. 
+ * Fires data update events. 
+ * Shall be modal.
  * */
 public class TreeNodeAdd extends TreeNodeForm {
     private ErrorListener onError;
