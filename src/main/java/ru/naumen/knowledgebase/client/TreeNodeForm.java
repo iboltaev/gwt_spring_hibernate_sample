@@ -26,8 +26,8 @@ import com.google.gwt.user.client.ui.RichTextArea;
 import com.sencha.gxt.widget.core.client.form.HtmlEditor;
 
 /**
-   TreeNodeForm shows data contents on form and makes new data objects,
-   filled with form data.
+ *  TreeNodeForm shows data contents on form and makes new data objects,
+ *  filled with form data.
  */
 public class TreeNodeForm extends Composite {
     
