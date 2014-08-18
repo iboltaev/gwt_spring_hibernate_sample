@@ -10,6 +10,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 
+// TODO: make it modal, remove utils.Modal.. stuff
 public class TreeNodeAdd extends TreeNodeForm {
     private ErrorListener onError;
 
