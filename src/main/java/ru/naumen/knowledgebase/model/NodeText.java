@@ -7,6 +7,10 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.Comparator;
 
+/**
+ * This entity represents additional data of tree node,
+ * such as article text.
+ * */
 @Entity
 @Table
 public class NodeText {
