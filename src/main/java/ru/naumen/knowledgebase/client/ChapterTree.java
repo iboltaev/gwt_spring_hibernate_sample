@@ -33,6 +33,10 @@ import java.util.Iterator;
 
 import java.lang.StringBuilder;
 
+/**
+ * Represents tree data structure using Model as data soure.
+ * Can handle model updates at the root tree.
+ * */
 public class ChapterTree extends Composite {
 
     public static interface ClickHandler {
@@ -102,6 +106,10 @@ public class ChapterTree extends Composite {
         }
     }
     
+    /**
+     * Model of single node item, contains actual data.
+     * Can handle model updates.
+     */
     public static class ChapterModel {
         private TreeNodeJson json;
         private ListDataProvider<ChapterModel> parentProvider;
@@ -172,6 +180,9 @@ public class ChapterTree extends Composite {
         private void setJson(TreeNodeJson json) { this.json = json; }
     }
 
+    /**
+     *  Represents tree data model, fetches data.
+     */
     private class Model implements TreeViewModel {
         @Override
         public <T> NodeInfo<?> getNodeInfo(T value) {
@@ -225,6 +236,9 @@ public class ChapterTree extends Composite {
         }
     }
 
+    /**
+     * Represents controller layer, handles user events and render requests.
+     * */
     private class ChapterCell extends AbstractCell<ChapterModel> {
         ChapterCell() {
             super("click");
