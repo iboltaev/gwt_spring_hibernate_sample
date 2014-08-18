@@ -1,0 +1,482 @@
+--
+-- PostgreSQL database dump
+--
+
+SET statement_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+--
+-- Name: russian_ispell; Type: TEXT SEARCH DICTIONARY; Schema: public; Owner: iboltaev
+--
+
+CREATE TEXT SEARCH DICTIONARY russian_ispell (
+    TEMPLATE = pg_catalog.ispell,
+    dictfile = 'russian', afffile = 'russian', stopwords = 'russian' );
+
+
+ALTER TEXT SEARCH DICTIONARY public.russian_ispell OWNER TO iboltaev;
+
+--
+-- Name: en; Type: TEXT SEARCH CONFIGURATION; Schema: public; Owner: iboltaev
+--
+
+CREATE TEXT SEARCH CONFIGURATION en (
+    PARSER = pg_catalog."default" );
+
+ALTER TEXT SEARCH CONFIGURATION en
+    ADD MAPPING FOR asciiword WITH english_stem;
+
+ALTER TEXT SEARCH CONFIGURATION en
+    ADD MAPPING FOR word WITH russian_stem;
+
+ALTER TEXT SEARCH CONFIGURATION en
+    ADD MAPPING FOR numword WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION en
+    ADD MAPPING FOR email WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION en
+    ADD MAPPING FOR url WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION en
+    ADD MAPPING FOR host WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION en
+    ADD MAPPING FOR sfloat WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION en
+    ADD MAPPING FOR version WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION en
+    ADD MAPPING FOR hword_numpart WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION en
+    ADD MAPPING FOR hword_part WITH russian_stem;
+
+ALTER TEXT SEARCH CONFIGURATION en
+    ADD MAPPING FOR hword_asciipart WITH english_stem;
+
+ALTER TEXT SEARCH CONFIGURATION en
+    ADD MAPPING FOR numhword WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION en
+    ADD MAPPING FOR asciihword WITH english_stem;
+
+ALTER TEXT SEARCH CONFIGURATION en
+    ADD MAPPING FOR hword WITH russian_stem;
+
+ALTER TEXT SEARCH CONFIGURATION en
+    ADD MAPPING FOR url_path WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION en
+    ADD MAPPING FOR file WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION en
+    ADD MAPPING FOR "float" WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION en
+    ADD MAPPING FOR "int" WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION en
+    ADD MAPPING FOR uint WITH simple;
+
+
+ALTER TEXT SEARCH CONFIGURATION public.en OWNER TO iboltaev;
+
+--
+-- Name: ru; Type: TEXT SEARCH CONFIGURATION; Schema: public; Owner: iboltaev
+--
+
+CREATE TEXT SEARCH CONFIGURATION ru (
+    PARSER = pg_catalog."default" );
+
+ALTER TEXT SEARCH CONFIGURATION ru
+    ADD MAPPING FOR asciiword WITH english_stem;
+
+ALTER TEXT SEARCH CONFIGURATION ru
+    ADD MAPPING FOR word WITH russian_ispell, russian_stem;
+
+ALTER TEXT SEARCH CONFIGURATION ru
+    ADD MAPPING FOR numword WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION ru
+    ADD MAPPING FOR email WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION ru
+    ADD MAPPING FOR url WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION ru
+    ADD MAPPING FOR host WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION ru
+    ADD MAPPING FOR sfloat WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION ru
+    ADD MAPPING FOR version WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION ru
+    ADD MAPPING FOR hword_numpart WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION ru
+    ADD MAPPING FOR hword_part WITH russian_ispell, russian_stem;
+
+ALTER TEXT SEARCH CONFIGURATION ru
+    ADD MAPPING FOR hword_asciipart WITH english_stem;
+
+ALTER TEXT SEARCH CONFIGURATION ru
+    ADD MAPPING FOR numhword WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION ru
+    ADD MAPPING FOR asciihword WITH english_stem;
+
+ALTER TEXT SEARCH CONFIGURATION ru
+    ADD MAPPING FOR hword WITH russian_ispell, russian_stem;
+
+ALTER TEXT SEARCH CONFIGURATION ru
+    ADD MAPPING FOR url_path WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION ru
+    ADD MAPPING FOR file WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION ru
+    ADD MAPPING FOR "float" WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION ru
+    ADD MAPPING FOR "int" WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION ru
+    ADD MAPPING FOR uint WITH simple;
+
+
+ALTER TEXT SEARCH CONFIGURATION public.ru OWNER TO iboltaev;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: nodetext; Type: TABLE; Schema: public; Owner: iboltaev; Tablespace: 
+--
+
+CREATE TABLE nodetext (
+    id integer NOT NULL,
+    text text
+);
+
+
+ALTER TABLE public.nodetext OWNER TO iboltaev;
+
+--
+-- Name: nodetext_id_seq; Type: SEQUENCE; Schema: public; Owner: iboltaev
+--
+
+CREATE SEQUENCE nodetext_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.nodetext_id_seq OWNER TO iboltaev;
+
+--
+-- Name: nodetext_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: iboltaev
+--
+
+ALTER SEQUENCE nodetext_id_seq OWNED BY nodetext.id;
+
+
+--
+-- Name: sample_ids; Type: SEQUENCE; Schema: public; Owner: iboltaev
+--
+
+CREATE SEQUENCE sample_ids
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.sample_ids OWNER TO iboltaev;
+
+--
+-- Name: sample; Type: TABLE; Schema: public; Owner: iboltaev; Tablespace: 
+--
+
+CREATE TABLE sample (
+    id integer DEFAULT nextval('sample_ids'::regclass) NOT NULL,
+    text character varying(64) NOT NULL
+);
+
+
+ALTER TABLE public.sample OWNER TO iboltaev;
+
+--
+-- Name: testsearch; Type: TABLE; Schema: public; Owner: iboltaev; Tablespace: 
+--
+
+CREATE TABLE testsearch (
+    id integer NOT NULL,
+    text tsvector
+);
+
+
+ALTER TABLE public.testsearch OWNER TO iboltaev;
+
+--
+-- Name: testsearch_id_seq; Type: SEQUENCE; Schema: public; Owner: iboltaev
+--
+
+CREATE SEQUENCE testsearch_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.testsearch_id_seq OWNER TO iboltaev;
+
+--
+-- Name: testsearch_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: iboltaev
+--
+
+ALTER SEQUENCE testsearch_id_seq OWNED BY testsearch.id;
+
+
+--
+-- Name: treenode; Type: TABLE; Schema: public; Owner: iboltaev; Tablespace: 
+--
+
+CREATE TABLE treenode (
+    id integer NOT NULL,
+    parentid integer,
+    briefname character varying(32) NOT NULL,
+    name character varying(64) NOT NULL,
+    textid integer
+);
+
+
+ALTER TABLE public.treenode OWNER TO iboltaev;
+
+--
+-- Name: treenode_id_seq; Type: SEQUENCE; Schema: public; Owner: iboltaev
+--
+
+CREATE SEQUENCE treenode_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.treenode_id_seq OWNER TO iboltaev;
+
+--
+-- Name: treenode_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: iboltaev
+--
+
+ALTER SEQUENCE treenode_id_seq OWNED BY treenode.id;
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: iboltaev
+--
+
+ALTER TABLE ONLY nodetext ALTER COLUMN id SET DEFAULT nextval('nodetext_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: iboltaev
+--
+
+ALTER TABLE ONLY testsearch ALTER COLUMN id SET DEFAULT nextval('testsearch_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: iboltaev
+--
+
+ALTER TABLE ONLY treenode ALTER COLUMN id SET DEFAULT nextval('treenode_id_seq'::regclass);
+
+
+--
+-- Data for Name: nodetext; Type: TABLE DATA; Schema: public; Owner: iboltaev
+--
+
+COPY nodetext (id, text) FROM stdin;
+51	Душа моя озарена неземной радостью, как эти чудесные весенние утра, \nкоторыми я наслаждаюсь от всего сердца. Я совсем один и блаженствую в \nздешнем краю, словно созданном для таких, как я. Я так счастлив, мой \nдруг, так упоен ощущением покоя, что искусство мое страдает от этого. Ни\n одного штриха не мог бы я сделать, а никогда не был таким большим \nхудожником, как в эти минуты. Когда от милой моей долины поднимается пар\n и полдневное солнце стоит над непроницаемой чащей темного леса и лишь \nредкий луч проскальзывает в его святая святых, а я лежу в высокой траве у\n быстрого ручья и, прильнув к земле, вижу тысячи всевозможных былинок и \nчувствую, как близок моему сердцу крошечный мирок, что снует между \nстебельками, наблюдаю эти неисчислимые, непостижимые разновидности \nчервяков и мошек и чувствую близость всемогущего, создавшего нас по \nсвоему подобию, веяние вселюбящего, судившего нам парить в вечном \nблаженстве, когда взор мой туманится и все вокруг меня и небо надо мной \nзапечатлены в моей душе, точно образ возлюбленной, - тогда, дорогой \nдруг, меня часто томит мысль: "Ах! Как бы выразить, как бы вдохнуть в \nрисунок то, что так полно, так трепетно живет во мне, запечатлеть \nотражение моей души, как душа моя - отражение предвечного бога!" Друг 
+1	Он собрал семь своих заглавных букв, подпоясал инициал за пояс и \nпустился в дорогу.  Взобравшись на первую вершину курсивных гор, бросил \nон последний взгляд назад, на силуэт своего родного города Буквоград, на\n заголовок деревни Алфавит и на подзаголовок своего переулка Строчка.  \nГрустный реторический вопрос скатился по его щеке и он продолжил свой \nпуть.  По дороге встретил текст рукопись.  Она предупредила его: «В моей\n стране все переписывается по несколько раз.  Единственное, что от меня \nосталось, это приставка «и».  Возвращайся ты лучше в свою безопасную \nстрану».  Не послушавшись рукописи, наш текст продолжил свой путь.  \nВскоре ему повстречался коварный составитель рекламных текстов, \nнапоивший его языком и речью и заманивший в свое агенство, которое \nиспользовало его снова и снова в своих проектах.  И если его не \nпереписали, то живет он там до сих пор. Далеко-далеко за словесными \nгорами в стране гласных и согласных живут рыбные тексты.  Вдали от всех \nживут они в буквенных домах на берегу Семантика большого языкового \nокеана.  Маленький ручеек Даль журчит по всей стране и обеспечивает ее \nвсеми необходимыми правилами.  Эта парадигматическая страна, в которой \nжаренные члены предложения залетают прямо в рот.  Даже всемогущая \nпунктуация не имеет власти над рыбными текстами, ведущими \nбезорфографичный образ жизни.  Однажды одна маленькая  
+53	Далеко-далеко за словесными горами в стране гласных и согласных живут \nрыбные тексты. Вдали от всех живут они в буквенных домах на берегу \nСемантика большого языкового океана. Маленький ручеек Даль журчит по \nвсей стране и обеспечивает ее всеми необходимыми правилами. Эта \nпарадигматическая страна, в которой жаренные члены предложения залетают \nпрямо в рот. Даже всемогущая пунктуация не имеет власти над рыбными \nтекстами, ведущими безорфографичный образ жизни. Однажды одна маленькая \nстрочка рыбного текста по имени Lorem ipsum решила выйти в большой мир \nграмматики. Великий Оксмокс предупреждал ее о злых запятых, диких знаках\n вопроса и коварных точках с запятой, но текст не дал сбить себя с \nтолку. Он собрал семь своих заглавных букв, подпоясал инициал за пояс и \nпустился в дорогу. Взобравшись на первую вершину курсивных гор, бросил \nон последний взгляд назад, на силуэт своего родного города Буквоград, на\n заголовок деревни Алфавит и на подзаголовок своего переулка Строчка. \nГрустный реторический вопрос скатился по его щеке и он продолжил свой \nпуть. По дороге встретил текст рукопись. Она предупредила его: «В моей \nстране все переписывается по несколько раз. Единственное, что от меня \nосталось, это приставка «и». Возвращайся ты лучше в свою безопасную \nстрану». Не послушавшись рукописи, наш текст продолжил свой путь. Вскоре\n ему повстречался коварный составитель 
+52	Проснувшись однажды утром после беспокойного сна, Грегор Замза \nобнаружил, что он у себя в постели превратился в страшное насекомое. \nЛежа на панцирнотвердой спине, он видел, стоило ему приподнять голову, \nсвой коричневый, выпуклый, разделенный дугообразными чешуйками живот, на\n верхушке которого еле держалось готовое вот-вот окончательно сползти \nодеяло. Его многочисленные, убого тонкие по сравнению с остальным телом \nножки беспомощно копошились у него перед глазами. «Что со мной \nслучилось?» – подумал он. Это не было сном. Его комната, настоящая, \nразве что слишком маленькая, но обычная комната, мирно покоилась в своих\n четырех хорошо знакомых стенах. Над столом, где были разложены \nраспакованные образцы сукон – Замза был коммивояжером, – висел портрет, \nкоторый он недавно вырезал из иллюстрированного журнала и вставил в \nкрасивую золоченую рамку. На портрете была изображена дама в меховой \nшляпе и боа, она сидела очень прямо и протягивала зрителю тяжелую \nмеховую муфту, в которой целиком исчезала ее рука. Затем взгляд Грегора \nустремился в окно, и пасмурная погода – слышно было, как по жести \nподоконника стучат капли дождя – привела его и вовсе в грустное \nнастроение. «Хорошо бы еще немного поспать и забыть всю эту чепуху», – \nподумал он, но это было совершенно неосуществимо, он привык спать на \nправом боку, а в теперешнем своем 
+54	<div id="idTextPanel" class="jqDnR"><p style="font-family: Verdana,Geneva,sans-serif; font-style: normal; font-weight: normal; font-size: 10px; letter-spacing: normal; line-height: normal; text-transform: none; text-decoration: none; text-align: left;">Lorem\n ipsum dolor sit amet, consectetuer adipiscing elit.  Aenean commodo \nligula eget dolor.  Aenean massa.  Cum sociis natoque penatibus et \nmagnis dis parturient montes, nascetur ridiculus mus.  Donec quam felis,\n ultricies nec, pellentesque eu, pretium quis, sem.  Nulla consequat \nmassa quis enim.  Donec pede justo, fringilla vel, aliquet nec, \nvulputate eget, arcu.  In enim justo, rhoncus ut, imperdiet a, venenatis\n vitae, justo.  Nullam dictum felis eu pede mollis pretium.  Integer \ntincidunt.  Cras dapibus.  Vivamus elementum semper nisi.  Aenean \nvulputate eleifend tellus.  Aenean leo ligula, porttitor eu, consequat \nvitae, eleifend ac, enim.  Aliquam lorem ante, dapibus in, viverra quis,\n feugiat a, tellus.</p><p style="font-family: Verdana,Geneva,sans-serif; font-style: normal; font-weight: normal; font-size: 10px; letter-spacing: normal; line-height: normal; text-transform: none; text-decoration: none; text-align: left;">\n Phasellus viverra nulla ut metus varius laoreet.  Quisque rutrum.  \nAenean imperdiet.  Etiam ultricies nisi vel augue.  Curabitur \nullamcorper ultricies nisi.  Nam eget dui.  Etiam rhoncus.  Maecenas \ntempus, tellus eget condimentum rhoncus, sem quam semper libero, sit \namet adipiscing sem neque sed ipsum.  Nam quam nunc, blandit vel, luctus\n pulvinar, hendrerit id, lorem.  Maecenas nec odio et ante tincidunt \ntempus.  Donec vitae sapien ut libero venenatis faucibus.  Nullam quis \nante.  Etiam sit amet orci eget eros faucibus tincidunt.  Duis leo.  Sed\n fringilla mauris sit amet nibh.  Donec sodales sagittis magna.  Sed \nconsequat, leo eget bibendum sodales, augue velit cursus nunc, quis \ngravida magna mi a libero.  Fusce vulputate eleifend sapien.  Vestibulum\n purus quam, scelerisque ut, mollis sed, nonummy id, metus.  Nullam \naccumsan lorem in dui.  Cras ultricies mi eu turpis hendrerit fringilla.\n  Vestibulum ante ipsum primis in faucibus orci luctus et ultrices \nposuere cubilia Curae; In ac dui quis mi consectetuer lacinia.  Nam \npretium turpis et arcu.  Duis arcu tortor, suscipit eget, imperdiet nec,\n imperdiet iaculis, ipsum.  Sed aliquam ultrices mauris.  Integer ante \narcu, accumsan a, consectetuer eget, posuere ut, mauris.  Praesent \nadipiscing.  Phasellus ullamcorper ipsum rutrum nunc.  Nunc nonummy \nmetus.  Vestibulum volutpat pretium libero.  Cras id dui.  Aenean ut  </p></div>
+56	\n Он почувствовал вверху живота легкий зуд; медленно подвинулся на спине к\n прутьям кровати, чтобы удобнее было поднять голову; нашел зудевшее \nместо, сплошь покрытое, как оказалось, белыми непонятными точечками; \nхотел было ощупать это место одной из ножек, но сразу отдернул ее, ибо \nдаже простое прикосновение вызвало у него, Грегора, озноб.  Он \nсоскользнул в прежнее свое положение.  «От этого раннего вставания, – \nподумал он, – можно совсем обезуметь.  Человек должен высыпаться.  \nДругие коммивояжеры живут, как одалиски.  Когда я, например, среди дня \nвозвращаюсь в гостиницу, чтобы переписать полученные заказы, эти господа\n только завтракают.<p style="font-family: Verdana,Geneva,sans-serif; font-style: normal; font-weight: normal; font-size: 10px; letter-spacing: normal; line-height: normal; text-transform: none; text-decoration: none; text-align: left;">\n А осмелься я вести себя так, мои хозяин выгнал бы меня сразу.  Кто \nзнает, впрочем, может быть, это было бы даже очень хорошо для меня.  \nЕсли бы я не сдерживался ради родителей, я бы давно заявил об уходе, я \nбы подошел к своему хозяину и выложил ему все, что о нем думаю.  Он бы \nтак и свалился с конторки!  Странная у него манера – садиться на \nконторку и с ее высоты разговаривать со служащим, который вдобавок \nвынужден подойти вплотную к конторке из-за того, что хозяин туг на ухо. \n Однако надежда еще не совсем потеряна: как только я накоплю денег, \nчтобы выплатить долг моих родителей – на это уйдет еще лет пять-шесть, –\n я так и поступлю.  Тут-то мы и распрощаемся раз и навсегда.  А пока что\n надо подниматься, мой поезд отходит в пять».  И он взглянул на \nбудильник, который тикал на сундуке.  «Боже правый! » – подумал он.  \nБыло половина седьмого, и стрелки спокойно двигались дальше, было даже \nбольше половины, без малого уже три четверти.  Неужели будильник не \nзвонил?  С кровати было видно, что он поставлен правильно, на четыре \nчаса; и он, несомненно, звонил.  Но как можно было спокойно спать под \nэтот сотрясающий  </p>
+55	<p style="font-family: Verdana,Geneva,sans-serif; font-style: normal; font-weight: normal; font-size: 10px; letter-spacing: normal; line-height: normal; text-transform: none; text-decoration: none; text-align: left;">\n Затем взгляд Грегора устремился в окно, и пасмурная погода – слышно \nбыло, как по жести подоконника стучат капли дождя – привела его и вовсе в\n грустное настроение.  «Хорошо бы еще немного поспать и забыть всю эту \nчепуху», – подумал он, но это было совершенно неосуществимо, он привык \nспать на правом боку, а в теперешнем своем состоянии он никак не мог \nпринять этого положения.  С какой бы силой ни поворачивался он на правый\n бок, он неизменно сваливался опять на спину.</p><p style="font-family: Verdana,Geneva,sans-serif; font-style: normal; font-weight: normal; font-size: 10px; letter-spacing: normal; line-height: normal; text-transform: none; text-decoration: none; text-align: left;">\n Закрыв глаза, чтобы не видеть своих барахтающихся ног, он проделал это \nдобрую сотню раз и отказался от этих попыток только тогда, когда \nпочувствовал какую-то неведомую дотоле, тупую и слабую боль в боку.  «Ах\n ты, господи, – подумал он, – какую я выбрал хлопотную профессию!  Изо \nдня в день в разъездах.  Деловых волнений куда больше, чем на месте, в \nторговом доме, а кроме того, изволь терпеть тяготы дороги, думай о \nрасписании поездов, мирись с плохим, нерегулярным питанием, завязывай со\n все новыми и новыми людьми недолгие, никогда не бывающие сердечными \nотношения.  Черт бы побрал все это! » Он почувствовал вверху живота \nлегкий зуд; медленно подвинулся на спине к прутьям кровати, чтобы \nудобнее было поднять голову; нашел зудевшее место, сплошь покрытое, как \nоказалось, белыми непонятными точечками; хотел было ощупать это место \nодной из ножек, но сразу отдернул ее, ибо даже простое прикосновение \nвызвало у него, Грегора, озноб.  Он соскользнул в прежнее свое \nположение.  «От этого раннего вставания, – подумал он, – можно совсем \nобезуметь.  Человек должен высыпаться.  Другие коммивояжеры живут, как \nодалиски.  Когда я, например, среди дня возвращаюсь в гостиницу,  </p>
+\.
+
+
+--
+-- Name: nodetext_id_seq; Type: SEQUENCE SET; Schema: public; Owner: iboltaev
+--
+
+SELECT pg_catalog.setval('nodetext_id_seq', 56, true);
+
+
+--
+-- Data for Name: sample; Type: TABLE DATA; Schema: public; Owner: iboltaev
+--
+
+COPY sample (id, text) FROM stdin;
+1	aaa
+2	bbb
+\.
+
+
+--
+-- Name: sample_ids; Type: SEQUENCE SET; Schema: public; Owner: iboltaev
+--
+
+SELECT pg_catalog.setval('sample_ids', 2, true);
+
+
+--
+-- Data for Name: testsearch; Type: TABLE DATA; Schema: public; Owner: iboltaev
+--
+
+COPY testsearch (id, text) FROM stdin;
+\.
+
+
+--
+-- Name: testsearch_id_seq; Type: SEQUENCE SET; Schema: public; Owner: iboltaev
+--
+
+SELECT pg_catalog.setval('testsearch_id_seq', 1, true);
+
+
+--
+-- Data for Name: treenode; Type: TABLE DATA; Schema: public; Owner: iboltaev
+--
+
+COPY treenode (id, parentid, briefname, name, textid) FROM stdin;
+1	\N	aaa	aaa	\N
+59	58	Verter	Verter	51
+2	\N	bbb	bbb	1
+61	60	Kafka	Kafka (гречневая)	52
+63	1	3	3	\N
+64	63	3.1	3.1	\N
+65	64	Lorem ipsum	Lorem ipsum ...	54
+62	58	Beyond word mountains	Beyond word mountains (full version)	53
+66	\N	ccc	ccc	\N
+68	66	Kafka 2	Kafka 2	56
+67	\N	Kafka 3	Kafka 3	55
+58	1	1	1	\N
+60	1	2	2	\N
+\.
+
+
+--
+-- Name: treenode_id_seq; Type: SEQUENCE SET; Schema: public; Owner: iboltaev
+--
+
+SELECT pg_catalog.setval('treenode_id_seq', 68, true);
+
+
+--
+-- Name: nodetext_pkey; Type: CONSTRAINT; Schema: public; Owner: iboltaev; Tablespace: 
+--
+
+ALTER TABLE ONLY nodetext
+    ADD CONSTRAINT nodetext_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: sample_pkey; Type: CONSTRAINT; Schema: public; Owner: iboltaev; Tablespace: 
+--
+
+ALTER TABLE ONLY sample
+    ADD CONSTRAINT sample_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: testsearch_pkey; Type: CONSTRAINT; Schema: public; Owner: iboltaev; Tablespace: 
+--
+
+ALTER TABLE ONLY testsearch
+    ADD CONSTRAINT testsearch_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: treenode_pkey; Type: CONSTRAINT; Schema: public; Owner: iboltaev; Tablespace: 
+--
+
+ALTER TABLE ONLY treenode
+    ADD CONSTRAINT treenode_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: treenode_parentid_idx; Type: INDEX; Schema: public; Owner: iboltaev; Tablespace: 
+--
+
+CREATE INDEX treenode_parentid_idx ON treenode USING btree (parentid);
+
+
+--
+-- Name: treenode_textid_idx; Type: INDEX; Schema: public; Owner: iboltaev; Tablespace: 
+--
+
+CREATE INDEX treenode_textid_idx ON treenode USING btree (textid);
+
+
+--
+-- Name: treenode_parentid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: iboltaev
+--
+
+ALTER TABLE ONLY treenode
+    ADD CONSTRAINT treenode_parentid_fkey FOREIGN KEY (parentid) REFERENCES treenode(id) ON DELETE CASCADE;
+
+
+--
+-- Name: treenode_textid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: iboltaev
+--
+
+ALTER TABLE ONLY treenode
+    ADD CONSTRAINT treenode_textid_fkey FOREIGN KEY (textid) REFERENCES nodetext(id) ON DELETE CASCADE;
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
