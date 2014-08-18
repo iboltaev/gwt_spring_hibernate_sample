@@ -163,8 +163,6 @@ public class ChapterTree extends Composite {
                 removeItem(parentProvider.getList(), newVal.getId());
             } else if (action == DataChangeListener.Action.EDIT) {
                 json = newVal;
-                find(parentProvider.getList(), json.getId())
-                        .setJson(newVal);
                 parentProvider.refresh();
             } else if (provider != null) {
                 provider.getList().add(
@@ -176,8 +174,6 @@ public class ChapterTree extends Composite {
                         provider));
             }
         }
-
-        private void setJson(TreeNodeJson json) { this.json = json; }
     }
 
     /**
@@ -280,17 +276,6 @@ public class ChapterTree extends Composite {
                     model.setLastNum(counter);
                 counter++;
             }
-        }
-        return result;
-    }
-
-    private static ChapterModel find(List<ChapterModel> list, int id) {
-        Iterator<ChapterModel> it = list.iterator();
-        ChapterModel result = null;
-        while (it.hasNext()) {
-            result = it.next();
-            if (result.json().getId() == id)
-                break;
         }
         return result;
     }
