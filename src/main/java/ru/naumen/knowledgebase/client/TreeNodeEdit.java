@@ -15,6 +15,9 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 
+/**
+ * Provides UI to update nodes. Fires data change events.
+ * */
 public class TreeNodeEdit extends TreeNodeForm {
     private ErrorListener onError;
     private int id = 0;
